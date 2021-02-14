@@ -7,7 +7,7 @@ def built_in_method(im):
 
 
 def average_method(im):
-    height, width, channels = im.shape
+    height, width, ch = im.shape
     imo = np.zeros((height, width, 3), dtype=int)
 
     for y in range(height):
@@ -19,7 +19,7 @@ def average_method(im):
 
 
 def weighted_method(im):
-    height, width, channels = im.shape
+    height, width, ch = im.shape
     imo = np.zeros((height, width, 3), dtype=int)
 
     for y in range(height):
@@ -31,8 +31,11 @@ def weighted_method(im):
 
 
 def hsv_method(im):
-    height, width, channels = im.shape
-    imo = np.zeros((height, width, 3), dtype=int)
-
+    im = color.rgb2hsv(im)
+    height, width, ch = im.shape
+    imo = im
     for y in range(height):
-        for
+        for x in range(width):
+            imo[y][x][1] = 0
+            
+    return color.hsv2rgb(imo)
