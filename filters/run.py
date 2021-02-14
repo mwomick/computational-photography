@@ -1,17 +1,19 @@
+import multiprocessing
+
 from skimage import io
 import numpy as np
 from skimage import img_as_ubyte
 
 from src import grayscale as gra
 from src import sepia as sep
-
+from src import balancing as bal
 
 INPUT_ROOT_DIR = 'data/'
 OUTPUT_ROOT_DIR = 'data/out/' 
 
 
 def gray():
-    ims = ['belltower.jpg', 'venice1.jpg']
+    ims = ['belltower.png', 'venice1.jpg']
 
     for f in ims:
         im = io.imread(INPUT_ROOT_DIR + f)
@@ -22,12 +24,29 @@ def gray():
 
 
 def sepia():
-    ims = ['belltower.jpg', 'venice1.jpg']
+    ims = ['belltower.png', 'venice1.jpg']
 
     for f in ims:
         im = io.imread(INPUT_ROOT_DIR + f)
         io.imsave(OUTPUT_ROOT_DIR + "exercise2/" + f, img_as_ubyte(sep.sepia(im)))
 
 
-# gray()
-# sepia()
+def balance():
+    ims = ['belltower.png', 'venice1.jpg']
+
+    for f in ims:
+        im = io.imread(INPUT_ROOT_DIR + f)
+        io.imsave(OUTPUT_ROOT_DIR + "exercise3/" + f, img_as_ubyte(bal.balance(im)))
+
+
+if __name__ == '__main__':
+    functions = [gray, sepia, balance]
+    processes = []
+
+    for f in functions:
+        p = multiprocessing.Process(target=f)
+        processes.append(p)
+        p.start()
+
+    for p in processes:
+        p.join()

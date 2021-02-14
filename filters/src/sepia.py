@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def sepia(im):
     height, width, ch = im.shape
     imo = np.zeros((height, width, 3), dtype=np.uint8)
