@@ -7,6 +7,7 @@ from skimage import img_as_ubyte
 from src import grayscale as gra
 from src import sepia as sep
 from src import balancing as bal
+from src import artistic as art 
 
 INPUT_ROOT_DIR = 'data/'
 OUTPUT_ROOT_DIR = 'data/out/' 
@@ -39,8 +40,16 @@ def balance():
         io.imsave(OUTPUT_ROOT_DIR + "exercise3/" + f, img_as_ubyte(bal.balance(im)))
 
 
+def artistic():
+    ims = ['belltower.png', 'venice1.jpg', 'swirl.png']
+
+    for f in ims:
+        im = io.imread(INPUT_ROOT_DIR + f)
+        io.imsave(OUTPUT_ROOT_DIR + "exercise4/" + f, img_as_ubyte(art.grad(im)))
+
+
 if __name__ == '__main__':
-    functions = [gray, sepia, balance]
+    functions = [gray, sepia, balance, artistic]
     processes = []
 
     for f in functions:
