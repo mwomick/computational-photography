@@ -3,6 +3,7 @@ import multiprocessing
 from skimage import io
 import numpy as np
 from skimage import img_as_ubyte
+import os
 
 from src import grayscale as gra
 from src import sepia as sep
@@ -41,12 +42,20 @@ def balance():
 
 
 def artistic():
-    ims = ['belltower.png', 'venice1.jpg', 'swirl.png']
+    ims = ['tree.png', 'belltower.png', 'venice1.jpg', 'swirl.png']
 
     for f in ims:
         im = io.imread(INPUT_ROOT_DIR + f)
-        io.imsave(OUTPUT_ROOT_DIR + "exercise4/" + f, img_as_ubyte(art.grad(im)))
+        io.imsave(OUTPUT_ROOT_DIR + "exercise4/" + f, img_as_ubyte(art.bw_grad(im)))
 
+
+def clean():
+    for i in range(1, 4):
+        os.system('rm data/out/exercise1/method'+str(i)+'/*')
+    for i in range(2, 5):
+        os.system('rm data/out/exercise'+str(i)+'/*')
+
+clean()
 
 if __name__ == '__main__':
     functions = [gray, sepia, balance, artistic]
