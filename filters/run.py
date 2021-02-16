@@ -42,11 +42,11 @@ def balance():
 
 
 def artistic():
-    ims = ['tree.png', 'belltower.png', 'venice1.jpg', 'swirl.png']
+    ims = ['belltower.png', 'lighthouse.png', 'tree.png']
 
     for f in ims:
         im = io.imread(INPUT_ROOT_DIR + f)
-        io.imsave(OUTPUT_ROOT_DIR + "exercise4/" + f, img_as_ubyte(art.bw_grad(im)))
+        io.imsave(OUTPUT_ROOT_DIR + "exercise4/" + f, img_as_ubyte(art.neon(im)))
 
 
 def clean():
@@ -55,10 +55,11 @@ def clean():
     for i in range(2, 5):
         os.system('rm data/out/exercise'+str(i)+'/*')
 
+
 clean()
 
 if __name__ == '__main__':
-    functions = [gray, sepia, balance, artistic]
+    functions = [sepia, artistic]
     processes = []
 
     for f in functions:
