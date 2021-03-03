@@ -1,5 +1,5 @@
 belltower.png, belltower.jpg
 <https://www.unc.edu/wp-content/uploads/2020/08/belltower2020.jpg>
 
-paris.jpg
+paris.jpg, nicaragua.jpg
 Michael Womick
