@@ -89,7 +89,7 @@ def clean():
 # clean()
 
 if __name__ == '__main__':
-    functions = [vignette, contrast, gray, sepia, balance, neon, comic]
+    functions = [comic] # vignette, contrast, gray, sepia, balance, neon, 
     processes = []
 
     for f in functions:

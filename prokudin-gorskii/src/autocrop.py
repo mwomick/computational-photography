@@ -1,0 +1,2 @@
+def crop(im):
+    pass
