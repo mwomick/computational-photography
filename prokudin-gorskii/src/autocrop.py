@@ -5,16 +5,17 @@ import cv2
 import numpy
 
 # == DEBUGGING =========
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 # ======================
 
 def crop(im):
+    
     height, width  = im.shape
 
     sobelx = Sobel(im, CV_64F, 1, 0, ksize=5)
     sobely = Sobel(im, CV_64F, 0, 1, ksize=5)
 
-    size = 31
+    size = 299
     kernel_blur_x = numpy.zeros((size, size))
     kernel_blur_x[int((size-1)/2), :] = numpy.ones(size)
     kernel_blur_x = kernel_blur_x / size
@@ -31,30 +32,29 @@ def crop(im):
 
     left = 0
     for i in range(0, 200):
-        if(numpy.mean(sobelx[:, i]) > 1.5e7):
+        if(numpy.mean(sobelx[:, i]) > 1e7):
             left = i
             break
 
     right = 0
     for i in range(width-1, 200, -1):
-        if(numpy.mean(sobelx[:, i]) > 1.5e7):
+        if(numpy.mean(sobelx[:, i]) > 1e7):
             right = i
             break 
 
     top = 0
     for i in range(0, height):
-        if(numpy.mean(sobely[i, :]) > 1.5e7):
+        if(numpy.mean(sobely[i, :]) > 1e7):
             top = i
             break
 
     bottom = height
     for i in range(top+250, height):
-        if(numpy.mean(sobely[i, :]) > 1.5e7):
+        if(numpy.mean(sobely[i, :]) > 1e7):
             bottom = i
             break
 
-    plt.imshow(im[top:bottom, left:right])
-    # plt.imshow(sobely)
-    plt.show()
+    #plt.imshow(im[top:bottom, left:right])
+    #plt.show()
 
     return im[top:bottom, left:right]

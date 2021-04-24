@@ -8,7 +8,9 @@ from skimage import img_as_ubyte
 import os
 
 from src.autocrop import crop
-# from src.align_basic import align_basic as basic 
+from src.align_basic import align_basic as basic
+from src.align_better import align_better as better
+from src.align_final import align_final as final
 
 INPUT_ROOT_DIR = 'data/in/'
 OUTPUT_ROOT_DIR = 'data/out/' 
@@ -25,12 +27,31 @@ def preprocess(im):
 
 
 def align_basic():
-    ims = ['cathedral.jpg', 'camel.jpg', 'chapel.jpg', 'courtyard.jpg', 'emir.jpg', 'gruppa.jpg', 'khan.jpg', 'monastery.jpg', 'nativity.jpg', 'railroad.jpg', 'settlers.jpg', 'urn.jpg']
+    ims = ['monastery.jpg', 'cathedral.jpg', 'camel.jpg', 'chapel.jpg', 'courtyard.jpg', 'emir.jpg', 'gruppa.jpg', 'khan.jpg', 'nativity.jpg', 'railroad.jpg', 'settlers.jpg', 'urn.jpg']
 
     for f in ims:
         im = io.imread(INPUT_ROOT_DIR + f)
         r, g, b = preprocess(im)
-        # io.imsave(OUTPUT_ROOT_DIR + "part1/" + f, img_as_ubyte(crop(im)))
+        io.imsave(OUTPUT_ROOT_DIR + "part1/" + f, img_as_ubyte(basic((r,g,b))))
+
+
+def align_better():
+    ims = ['monastery.jpg', 'cathedral.jpg', 'camel.jpg', 'chapel.jpg', 'courtyard.jpg', 'emir.jpg', 'gruppa.jpg', 'khan.jpg', 'nativity.jpg', 'railroad.jpg', 'settlers.jpg', 'urn.jpg']
+
+    for f in ims:
+        im = io.imread(INPUT_ROOT_DIR + f)
+        r, g, b = preprocess(im)
+        io.imsave(OUTPUT_ROOT_DIR + "part2/" + f, img_as_ubyte(better((r,g,b))))
+
+
+def align_final():
+    ims = ['monastery.jpg', 'cathedral.jpg', 'camel.jpg', 'chapel.jpg', 'courtyard.jpg', 'emir.jpg', 'gruppa.jpg', 'khan.jpg', 'nativity.jpg', 'railroad.jpg', 'settlers.jpg', 'urn.jpg']
+
+    for f in ims:
+        im = io.imread(INPUT_ROOT_DIR + f)
+        r, g, b = preprocess(im)
+        # final((r, g, b))
+        io.imsave(OUTPUT_ROOT_DIR + "part3/" + f, img_as_ubyte(final((r,g,b))))
 
 
 def clean():
@@ -40,7 +61,7 @@ def clean():
 # clean()
 
 if __name__ == '__main__':
-    functions = [align_basic] # vignette, contrast, gray, sepia, balance, neon, 
+    functions = [align_final] # vignette, contrast, gray, sepia, balance, neon, 
     processes = []
 
     for f in functions:
