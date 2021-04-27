@@ -8,17 +8,6 @@ from progress.bar import IncrementalBar
 
 MAX_THREADS = 150
 
-def rgb2gray(rgb):
-    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
-
-
-def imadjust(im):
-    H, S, V = cv2.split(cv2.cvtColor(im, cv2.COLOR_RGB2HSV))
-    eq_V = cv2.equalizeHist(V)
-    im = cv2.cvtColor(cv2.merge([H, S, eq_V]), cv2.COLOR_HSV2RGB)
-    return im
-
-
 def gkern(kern_width=60, kern_height=60, nsig=3):
     """Returns a 2D Gaussian kernel."""
     y = np.linspace(-nsig, nsig, kern_height+1)
