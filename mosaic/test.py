@@ -11,15 +11,15 @@ import numpy as np
 INPUT_ROOT_DIR = 'data/in/val2017/'
 OUTPUT_ROOT_DIR = 'data/out/'
 
-template_name = "profile_lowres.png"
+template_name = "profile.png"
 
 dataset_names = listdir(INPUT_ROOT_DIR)
 
 dataset = []
-for f in dataset_names[:250]:
+for f in dataset_names[:300]:
     e = Image.open(INPUT_ROOT_DIR + f)
     dataset.append(e)
 template = Image.open(INPUT_ROOT_DIR + template_name)
 
-show = mosaic(template, dataset, 60, 60)
+show = mosaic(template, dataset, 200, 150)
 io.imsave(OUTPUT_ROOT_DIR + "mosaic-"+str(int(time.time()))+".jpg", img_as_ubyte(show))
