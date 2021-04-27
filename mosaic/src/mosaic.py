@@ -9,7 +9,6 @@ from progress.bar import IncrementalBar
 MAX_THREADS = 150
 
 def gkern(kern_width=60, kern_height=60, nsig=3):
-    """Returns a 2D Gaussian kernel."""
     y = np.linspace(-nsig, nsig, kern_height+1)
     x = np.linspace(-nsig, nsig, kern_width+1)
     kern1a = np.diff(st.norm.cdf(y))
@@ -45,7 +44,8 @@ def optimal_image(template, dataset):
 def place_tile(dst, xi, yi, width, height, im, dataset):
     try:
         _im = np.array(optimal_image(im[yi:yi+height, xi:xi+width], dataset))
-        dst[yi*height+int(height/2):yi*height+height+int(height/2), xi*width+int(width/2):xi*width+width+int(width/2)] = _im[:height,:width]
+        # dst[yi*height+int(height/2):yi*height+height+int(height/2), xi*width+int(width/2):xi*width+width+int(width/2)] = _im[:height,:width]
+        dst[yi+int(height/2):yi+height+int(height/2), xi+int(width/2):xi+width+int(width/2)] = _im[:height,:width]
     except Exception as e:
         dst[yi:yi+height, xi:xi+width, :] = 0
         print(e)
@@ -54,7 +54,7 @@ def place_tile(dst, xi, yi, width, height, im, dataset):
 def mosaic(img, dataset, tile_width, tile_height):
     image = np.array(img)
 
-    output = np.zeros((tile_height*image.shape[0], tile_width*image.shape[1], 3), dtype=int)
+    output = np.zeros((image.shape[0]+tile_height, image.shape[1]+tile_width, 3), dtype=int)
     resized = []
     resize_bar = IncrementalBar('Resizing collection', max=len(dataset))
     for im in dataset:
@@ -70,12 +70,12 @@ def mosaic(img, dataset, tile_width, tile_height):
 
     queue = []
     bar = IncrementalBar('Mosaicking', max=image.shape[0]-tile_height)
-    for i in range(0, image.shape[0]-tile_height):
+    for i in range(0, image.shape[0]-tile_height, tile_height):
         bar.next()
-        for j in range(0, image.shape[1]-tile_width):
+        for j in range(0, image.shape[1]-tile_width, tile_width):
             thread = threading.Thread(target=place_tile, args=(output, j, i, tile_width, tile_height, image, resized,))
-            thread.start()
             queue.append(thread)
+            thread.start()
             if len(queue) > MAX_THREADS:
                 for thread in queue:
                     thread.join()
