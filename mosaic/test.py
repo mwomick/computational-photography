@@ -1,25 +1,35 @@
 from os import listdir
+import time
 
 from skimage import io, color, img_as_ubyte
 from PIL import Image
+import numpy as np
 from matplotlib import pyplot as plt
-import time
+from progress.bar import IncrementalBar
 
 from src.mosaic import mosaic
-import numpy as np
+from config import DATASET_ROOT_DIR, OUTPUT_ROOT_DIR, TEMPLATE_PATH, DATASET_MAX
 
-INPUT_ROOT_DIR = 'data/in/val2017/'
-OUTPUT_ROOT_DIR = 'data/out/'
+template = Image.open(TEMPLATE_PATH)
 
-template_name = "belltower.png"
+def _mosaic(template, set_dir, tile_width, tile_height):
+    files = listdir(set_dir)[:DATASET_MAX]
+    resized = []
+    resize_bar = IncrementalBar('Resizing collection', max=len(files))
+    for f in files:
+        im = Image.open(set_dir + f)
+        try:
+            e = np.array(im.resize((tile_width, tile_height)))
+            if e.shape[2] == 3:
+                resized.append(e)
+        except Exception as e:
+            continue
+        finally:
+            im.close()
+        resize_bar.next()
+    resize_bar.finish()
 
-dataset_names = listdir(INPUT_ROOT_DIR)
+    show = mosaic(template, resized, tile_width, tile_height)
+    io.imsave(OUTPUT_ROOT_DIR + "mosaic-"+str(int(time.time()))+".jpg", img_as_ubyte(show))
 
-dataset = []
-for f in dataset_names[:5500]:
-    e = Image.open(INPUT_ROOT_DIR + f)
-    dataset.append(e)
-template = Image.open(INPUT_ROOT_DIR + template_name)
-
-show = mosaic(template, dataset, 25, 25)
-io.imsave(OUTPUT_ROOT_DIR + "mosaic-"+str(int(time.time()))+".jpg", img_as_ubyte(show))
+_mosaic(template, DATASET_ROOT_DIR, 20, 20)

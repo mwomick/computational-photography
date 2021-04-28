@@ -5,8 +5,8 @@ import numpy as np
 import cv2        
 import scipy.stats  as st
 from progress.bar import IncrementalBar
+from config import MAX_THREADS
 
-MAX_THREADS = 150
 
 def gkern(kern_width=60, kern_height=60, nsig=3):
     y = np.linspace(-nsig, nsig, kern_height+1)
@@ -53,27 +53,14 @@ def place_tile(dst, xi, yi, width, height, im, dataset):
 
 def mosaic(img, dataset, tile_width, tile_height):
     image = np.array(img)
-
     output = np.zeros((image.shape[0]+tile_height, image.shape[1]+tile_width, 3), dtype=int)
-    resized = []
-    resize_bar = IncrementalBar('Resizing collection', max=len(dataset))
-    for im in dataset:
-        resize_bar.next()
-        e = np.array(im.resize((tile_width, tile_height)))
-        try:
-            if e.shape[2] == 3:
-                resized.append(e)
-        except Exception:
-            pass
-    resize_bar.finish()
-
 
     queue = []
     bar = IncrementalBar('Mosaicking', max=image.shape[0]-tile_height)
     for i in range(0, image.shape[0]-tile_height, tile_height):
         bar.next()
         for j in range(0, image.shape[1]-tile_width, tile_width):
-            thread = threading.Thread(target=place_tile, args=(output, j, i, tile_width, tile_height, image, resized,))
+            thread = threading.Thread(target=place_tile, args=(output, j, i, tile_width, tile_height, image, dataset,))
             queue.append(thread)
             thread.start()
             if len(queue) > MAX_THREADS:
