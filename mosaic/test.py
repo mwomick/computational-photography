@@ -8,11 +8,11 @@ from matplotlib import pyplot as plt
 from progress.bar import IncrementalBar
 
 from src.mosaic import mosaic
-from config import DATASET_ROOT_DIR, OUTPUT_ROOT_DIR, TEMPLATE_PATH, DATASET_MAX
+from config import DATASET_ROOT_DIR, OUTPUT_ROOT_DIR, TEMPLATE_PATH, DATASET_MAX, TILE_WIDTH, TILE_HEIGHT
 
-template = Image.open(TEMPLATE_PATH)
 
-def _mosaic(template, set_dir, tile_width, tile_height):
+def run(template_path, set_dir, tile_width, tile_height):
+    template = Image.open(template_path)
     files = listdir(set_dir)[:DATASET_MAX]
     resized = []
     resize_bar = IncrementalBar('Resizing collection', max=len(files))
@@ -32,4 +32,5 @@ def _mosaic(template, set_dir, tile_width, tile_height):
     show = mosaic(template, resized, tile_width, tile_height)
     io.imsave(OUTPUT_ROOT_DIR + "mosaic-"+str(int(time.time()))+".jpg", img_as_ubyte(show))
 
-_mosaic(template, DATASET_ROOT_DIR, 20, 20)
+
+run(TEMPLATE_PATH, DATASET_ROOT_DIR, TILE_WIDTH, TILE_HEIGHT)
