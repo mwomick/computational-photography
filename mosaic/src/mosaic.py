@@ -55,9 +55,9 @@ def mosaic(img, dataset, tile_width, tile_height):
     image = np.array(img)
     output = np.zeros((image.shape[0]+tile_height, image.shape[1]+tile_width, 3), dtype=int)
 
-    queue = []
-    bar = IncrementalBar('Mosaicking', max=image.shape[0]-tile_height)
+    bar = IncrementalBar('Mosaicking', max=1+(image.shape[0]-tile_height)/tile_height)
     for i in range(0, image.shape[0]-tile_height, tile_height):
+        queue = []
         bar.next()
         for j in range(0, image.shape[1]-tile_width, tile_width):
             thread = threading.Thread(target=place_tile, args=(output, j, i, tile_width, tile_height, image, dataset,))
@@ -69,6 +69,5 @@ def mosaic(img, dataset, tile_width, tile_height):
                 queue.clear()
         for thread in queue:
             thread.join()
-        queue.clear()
     bar.finish()
     return output
