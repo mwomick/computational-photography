@@ -23,10 +23,10 @@ def run(template_path, set_dir, tile_width, tile_height):
             if e.shape[2] == 3:
                 resized.append(e)
         except Exception as e:
-            continue
+            pass
         finally:
             im.close()
-        resize_bar.next()
+            resize_bar.next()
     resize_bar.finish()
 
     show = mosaic(template, resized, tile_width, tile_height)
