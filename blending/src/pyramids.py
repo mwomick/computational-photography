@@ -41,11 +41,10 @@ pyramid = []
 for i in range(0, 7):
     pyramid.append(mask_gaussians[i] * src_laplacians[i] + (1.-mask_gaussians[i]) * tar_laplacians[i])
 
-com = transform.resize(tar_gaussians[3], (tar.shape[0], tar.shape[1]))
-com += transform.resize(pyramid[3], (tar.shape[0], tar.shape[1]))
-com += transform.resize(pyramid[2], (tar.shape[0], tar.shape[1]))
-com += transform.resize(pyramid[1], (tar.shape[0], tar.shape[1]))
-com += transform.resize(pyramid[0], (tar.shape[0], tar.shape[1]))
+com = transform.resize(tar_gaussians[7], (tar.shape[0], tar.shape[1]))
+for i in reversed(range(0, 7)):
+    com += transform.resize(pyramid[i], (tar.shape[0], tar.shape[1]))
+
 
 
 plt.imshow(com)

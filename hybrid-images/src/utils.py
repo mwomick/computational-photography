@@ -19,9 +19,9 @@ def align_images(input_img_1, input_img_2, pts_img_1, pts_img_2,
     
     # Load images
     im1 = cv2.imread(input_img_1)
-    im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2RGB)
-
     im2 = cv2.imread(input_img_2)
+
+    im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2RGB)
     im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2RGB)
 
     # get image sizes
@@ -31,8 +31,6 @@ def align_images(input_img_1, input_img_2, pts_img_1, pts_img_2,
     # Get center coordinate of the line segment
     center_im1 = np.mean(pts_img_1, axis=0)
     center_im2 = np.mean(pts_img_2, axis=0)
-
-    plt.close('all')
 
     # translate first so that center of ref points is center of image
     tx = np.around((w1 / 2 - center_im1[0]) * 2).astype(int)
@@ -127,8 +125,8 @@ def align_images(input_img_1, input_img_2, pts_img_1, pts_img_2,
         im1 = im1[ceil(brd):-floor(brd), :, :]
         ty = ty+ceil(brd)
 
-    im1 = cv2.cvtColor(im1.astype(np.uint8), cv2.COLOR_RGB2BGR)
-    im2 = cv2.cvtColor(im2.astype(np.uint8), cv2.COLOR_RGB2BGR)
+    im1 = cv2.cvtColor(im1.astype(np.uint8), cv2.COLOR_RGB2GRAY)
+    im2 = cv2.cvtColor(im2.astype(np.uint8), cv2.COLOR_RGB2GRAY) 
 
     if save_images:
         output_img_1 = 'aligned_{}'.format(os.path.basename(input_img_1))
@@ -147,7 +145,6 @@ def prompt_eye_selection(image):
     xs = []
     ys = []
     clicked = np.zeros((2, 2), dtype=np.float32)
-
     # Define a callback function that will update the textarea
     def onmousedown(event):
         x = event.xdata
@@ -169,6 +166,7 @@ def prompt_eye_selection(image):
     fig.canvas.mpl_connect('button_press_event', onmousedown)
     fig.canvas.mpl_connect('button_release_event', onmouseup)
     fig.canvas.mpl_connect('close_event', onclose)
+    plt.show()
 
     return clicked
 
@@ -197,6 +195,7 @@ def interactive_crop(image):
         'cropped_image': None,
         'crop_bound': None
     }
+    plt.show()
 
     # Define a callback function that will update the textarea
     def onmousedown(event):
