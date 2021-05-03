@@ -15,7 +15,7 @@ def bokeh(image, mask):
     
     back = np.array(image*(mask/(255)), dtype=float)
 
-    disk = disk_filter(50)
+    disk = disk_filter(70)
     back_blurred = cv.filter2D(back, 0, disk)/255.
     mask_blurred = cv.filter2D(mask, 0, disk)/255.
 
@@ -27,13 +27,12 @@ def bokeh(image, mask):
                 e[y,x] = fore[y,x]
 
     plt.imshow(e)
-
     plt.show()
 
 INPUT_ROOT_DIR = 'data/in/'
 OUTPUT_ROOT_DIR = 'data/out/' 
 
-image = io.imread(INPUT_ROOT_DIR + "building.png")[:,:,:3]
-mask = io.imread(INPUT_ROOT_DIR + "building_mask.png")[:,:,:3]
+image = io.imread(INPUT_ROOT_DIR + "bigben.jpg")[:,:,:3]
+mask = io.imread(INPUT_ROOT_DIR + "bigben_mask.png")[:,:,:3]
 
 bokeh(image, mask)
