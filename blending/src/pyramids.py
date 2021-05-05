@@ -1,5 +1,5 @@
 import numpy as np
-from skimage import io, transform
+from skimage import io, transform, img_as_ubyte
 import cv2 as cv
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -28,9 +28,9 @@ def get_gaussians(im):
 INPUT_ROOT_DIR = 'data/in/'
 OUTPUT_ROOT_DIR = 'data/out/' 
 
-src = io.imread(INPUT_ROOT_DIR + "bear_padded.png")[:,:,:3]
-mask = io.imread(INPUT_ROOT_DIR + "bear_mask.png")[:,:,:3]
-tar = io.imread(INPUT_ROOT_DIR + "swim.jpg")[:,:,:3]
+src = io.imread(INPUT_ROOT_DIR + "canal_bear_padded.png")[:,:,:3]
+mask = io.imread(INPUT_ROOT_DIR + "canal_bear_mask.png")[:,:,:3]
+tar = io.imread(INPUT_ROOT_DIR + "canal.jpeg")[:,:,:3]
 
 mask_gaussians = get_gaussians(mask)
 tar_laplacians = get_laplacians(tar)
@@ -45,7 +45,10 @@ com = transform.resize(tar_gaussians[7], (tar.shape[0], tar.shape[1]))
 for i in reversed(range(0, 7)):
     com += transform.resize(pyramid[i], (tar.shape[0], tar.shape[1]))
 
+max = np.max(com)
+com = com/max
 
+io.imsave(OUTPUT_ROOT_DIR + "out.png", img_as_ubyte(com))
 
 plt.imshow(com)
 plt.show()

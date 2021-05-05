@@ -12,17 +12,17 @@ from scipy import signal
 from math import ceil, floor
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+import scipy.stats as st
 
-
-def align_images(input_img_1, input_img_2, pts_img_1, pts_img_2,
+def align_images(im1, im2, pts_img_1, pts_img_2,
                  save_images=False):
     
     # Load images
-    im1 = cv2.imread(input_img_1)
-    im2 = cv2.imread(input_img_2)
+    # im1 = cv2.imread(input_img_1)
+    # im2 = cv2.imread(input_img_2)
 
-    im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2RGB)
-    im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2RGB)
+    # im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2RGB)
+    # im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2RGB)
 
     # get image sizes
     h1, w1, b1 = im1.shape
@@ -125,8 +125,8 @@ def align_images(input_img_1, input_img_2, pts_img_1, pts_img_2,
         im1 = im1[ceil(brd):-floor(brd), :, :]
         ty = ty+ceil(brd)
 
-    im1 = cv2.cvtColor(im1.astype(np.uint8), cv2.COLOR_RGB2GRAY)
-    im2 = cv2.cvtColor(im2.astype(np.uint8), cv2.COLOR_RGB2GRAY) 
+    # im1 = cv2.cvtColor(im1.astype(np.uint8), cv2.COLOR_RGB2GRAY)
+    # im2 = cv2.cvtColor(im2.astype(np.uint8), cv2.COLOR_RGB2GRAY) 
 
     if save_images:
         output_img_1 = 'aligned_{}'.format(os.path.basename(input_img_1))
@@ -225,6 +225,14 @@ def interactive_crop(image):
     fig.canvas.mpl_connect('button_press_event', onmousedown)
     fig.canvas.mpl_connect('button_release_event', onmouseup)
     return return_object
+
+def gkern(kern_width=60, kern_height=60, nsig=3):
+    y = np.linspace(-nsig, nsig, kern_height+1)
+    x = np.linspace(-nsig, nsig, kern_width+1)
+    kern1a = np.diff(st.norm.cdf(y))
+    kern1b = np.diff(st.norm.cdf(x))
+    kern2d = np.outer(kern1a, kern1b)
+    return (kern2d/kern2d.sum())
 
 def gaussian_kernel(sigma, kernel_half_size):
     '''
