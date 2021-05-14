@@ -1,7 +1,7 @@
 DATASET_ROOT_DIR = 'data/in/val2014/'
-DATASET_MAX = 10000
+DATASET_MAX = 40504
 OUTPUT_ROOT_DIR = 'data/out/'
-TEMPLATE_PATH = 'data/in/templates/garden.png'
+TEMPLATE_PATH = 'data/in/templates/waterfall.png'
 MAX_THREADS = 150
-TILE_WIDTH = 16
-TILE_HEIGHT = 16
+TILE_WIDTH = 100
+TILE_HEIGHT = 100

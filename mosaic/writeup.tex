@@ -1,0 +1,64 @@
+\documentclass{article}
+
+% set font encoding for PDFLaTeX, XeLaTeX, or LuaTeX
+\usepackage{ifxetex,ifluatex}
+\if\ifxetex T\else\ifluatex T\else F\fi\fi T%
+  \usepackage{fontspec}
+\else
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{lmodern}
+\fi
+\usepackage{algorithmic}
+\usepackage{hyperref}
+
+\title{COMP 572: Final Project - Photomosaic}
+\author{Michael Womick}
+
+% Enable SageTeX to run SageMath code right inside this LaTeX file.
+% http://doc.sagemath.org/html/en/tutorial/sagetex.html
+% \usepackage{sagetex}
+
+% Enable PythonTeX to run Python – https://ctan.org/pkg/pythontex
+% \usepackage{pythontex}
+
+\begin{document}
+\maketitle
+
+I took a simple, but effective approach to generating a photomosaic. For this project, I used the Common Objects in Context 2014 dataset of roughly 40,000 images (https://cocodataset.org/) as the source of the tile images. Since mosaicking, as I implemented it, is essentially a type of downsampling, my first step was to convolve the source tiles and template blocks with a Gaussian filter. This had multiple benefits including more precise sampling and filtering noise from the images. The source tiles were then compared, one by one, with the template block using a mean-squared error approach. The optimal source tile was then selected for that block. Some problems encountered included how to handle images that could not be chopped into an integer number of blocks. I decided to exclude these excess portions, but another approach could have involved treating the last block as a tile of size $width\,\%\,tile\_size$ and $height\,\%\,tile\_size$, respectively. I implemented the code in Python, in part because it was simpler to manage an arbitrary number of source image files and I was able to use threads to speed up the tile search.
+\vspace{\baselineskip}
+
+\textbf{Psuedocode implementation.}
+
+\begin{algorithmic}
+\STATE $collection\gets dataset$
+\STATE $template\gets image$
+\STATE $gkern\gets gaussian\_kernel(tile\_size)$
+\FORALL{$images$}
+  \STATE $processed\_collection[i]\gets scale(image, tile\_size) * gkern$
+\ENDFOR
+\STATE $out\gets array(template.height,template.width)$
+\STATE $x_i, y_i\gets 0$
+\STATE $x_f, y_f\gets tile\_size$
+\FOR{$y_f <= template.height$}
+  \FOR{$x_f <= template.width$}
+    \STATE $selected\gets none$
+    \STATE $min\gets inf$
+    \FORALL{$processed\_imgs}
+       \STATE $sampled\_rgn\gets template[y_i:y_f, x_i,x_f] * gkern$
+       \STATE $mse\gets sum(pow(sampled\_rgn-processed\_img, 2))$
+       \IF{mse < min}
+         \STATE $min\gets mse$
+         \STATE $selected\gets processed\_img$
+       \ENDIF
+    \ENDFOR
+  \STATE $out[y_i:y_f, x_i:x_f]\gets processed_img$
+  \STATE $x_i \gets x_i + tile\_size$
+  \STATE $x_f \gets x_f + tile\_size$
+  \ENDFOR
+\STATE $y_i \gets y_i + tile\_size$
+\STATE $y_f \gets y_f + tile\_size$
+\ENDFOR
+\end{algorithmic}
+
+\end{document}
